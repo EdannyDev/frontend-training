@@ -1,52 +1,43 @@
-# 🚀Software de Capacitación - Frontend
+# 🚀 Training Management System – Frontend
 
-## 📌Descripción  
-**Training App** es el frontend de un sistema de capacitación para el uso de un **ERP empresarial**.
-Este proyecto fue desarrollado como parte de mi **segunda estadía profesional** en la empresa **DIMMMSA**.
+## 📌 Overview
+Training Management Frontend is a Next.js application that provides a structured and role-based interface for corporate ERP training.
 
-**Usuarios pueden:**  
-- Completar cursos asignados según su rol.  
-- Seguir su progreso en tiempo real.  
-- Acceder a FAQs.  
+It communicates securely with the backend API and dynamically adapts content based on user roles.
 
-**Administradores pueden:**  
-- Gestionar capacitaciones, usuarios y FAQs.  
-- Ver el progreso de los usuarios mientras cursan.  
-- Recibir notificaciones por correo al aprobar una evaluación (con nombre y puntaje).  
+## 🎨 UI & Architecture
 
-**Este proyecto es ideal para empresas que buscan automatizar la formación y seguimiento de su personal.**  
+- Feature-based page organization  
+- Reusable component structure  
+- Axios-based API communication  
+- Role-based conditional rendering  
+- Progress visualization modules  
 
-## 🛠️Tecnologías utilizadas  
+## 🔐 Authentication Handling
 
-- **Framework:** Next.js  
-- **Gestión de datos / API:** Axios  
-- **Estilos:** Emotion Styled  
-- **Gestor de paquetes:** Yarn  
-- **Almacenamiento de imágenes:** Cloudinary  
+- Secure session handling via HttpOnly cookies (managed by backend)  
+- Role-based UI rendering  
+- Protected routes  
+- Automatic redirection for unauthorized access  
 
-## ⚙️Instalación y ejecución  
+## 📊 Core Features
+
+- Training module with real-time progress tracking  
+- Evaluation interface  
+- FAQ module  
+- Administrative dashboard  
+- User management interface  
+
+## 🛠 Tech Stack
+
+`Next.js` · `React` · `Axios`  
+
+`Emotion Styled` · `Cloudinary` · `Yarn`  
+
+## ⚙️ Local Setup
 
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/EdannyDev/training-app.git
-
-# 2. Instalar dependencias
-yarn install
-
-# 3. Ejecutar la aplicación
+git clone https://github.com/EdannyDev/training-app.git  
+yarn install  
 yarn dev
-
-# 4. Abrir en el navegador
-http://localhost:3000
-
-```
-
-## ✨Características principales
-- Módulo de capacitación: seguimiento del progreso en tiempo real.
-- Módulo de FAQs: acceso rápido a preguntas frecuentes.
-- Gestión administrativa: administrar capacitaciones, usuarios y FAQs.
-- Evaluaciones automáticas: asignadas por el sistema según el rol del usuario.
-- Notificaciones por correo: informe al aprobar evaluaciones con puntaje.
-
-## 🔗Enlaces útiles
-Backend: https://github.com/EdannyDev/backend-training
+```  

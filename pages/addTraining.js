@@ -18,6 +18,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faFileCirclePlus, faUpload } from '@fortawesome/free-solid-svg-icons';
 import Notification from '../frontend/components/notification';
+import { getViewerUrl } from '../utils/viewerUrl';
 
 const AddTraining = () => {
   const router = useRouter();
@@ -181,7 +182,7 @@ const AddTraining = () => {
         <FileInput><label onClick={handleDocumentUpload}><FontAwesomeIcon icon={faUpload} /> Seleccionar Documento</label></FileInput>
         <FileInput><label onClick={handleVideoUpload}><FontAwesomeIcon icon={faUpload} /> Seleccionar Video</label></FileInput>
 
-        {previewDocument && <PreviewContainer><embed src={previewDocument} type="application/pdf" width="100%" height="300px" /></PreviewContainer>}
+        {previewDocument && <PreviewContainer><iframe title="Vista previa" src={getViewerUrl(previewDocument)} style={{ width: '100%', height: '100%', border: 'none' }} /></PreviewContainer>}
         {previewVideo && <PreviewContainer><video src={previewVideo} controls width="100%" /></PreviewContainer>}
 
         <SectionTitle>Asignar Roles</SectionTitle>

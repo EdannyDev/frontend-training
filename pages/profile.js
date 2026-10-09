@@ -128,28 +128,24 @@ const Profile = () => {
     }
   };  
 
-  const handleDeleteAccount = async () => {
-    const token = localStorage.getItem('token');
-        if (!token) {
-      showNotification('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.', 'warning');
-      return;
-    }
+    const handleDeleteAccount = async () => {
     try {
-      await API.get('/users/profile');
+      await API.delete('/users/profile');
       setIsModalOpen(false);
       showNotification('Cuenta eliminada exitosamente.', 'success');
-      setTimeout(async () => {
-        try {
-          await API.delete('/users/profile');
-          localStorage.removeItem('token');
-          router.push('/login');
-        } catch (error) {
-          showNotification('Error al eliminar la cuenta', 'error');
-        }
+      setTimeout(() => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        localStorage.removeItem('userId');
+        router.push('/login');
       }, 3000);
     } catch (error) {
       setIsModalOpen(false);
-      showNotification('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.', 'warning');
+      if (error.response && error.response.status === 401) {
+        showNotification('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.', 'warning');
+      } else {
+        showNotification(error.response?.data?.error || 'Error al eliminar la cuenta', 'error');
+      }
     }
   };
   
@@ -210,7 +206,7 @@ const Profile = () => {
               </Description>
             ) : (
               <Description>
-                Correo asociado a tu puesto en ventas. <span style={{ color: '#e74c3c', fontWeight: 'bold' }}>NO</span> es editable.
+                Correo de tu cuenta. <span style={{ color: '#e74c3c', fontWeight: 'bold' }}>NO</span> es editable.
               </Description>
             )}
         </InputContainer>

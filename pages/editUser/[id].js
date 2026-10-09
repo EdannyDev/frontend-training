@@ -79,9 +79,9 @@ const EditUser = () => {
   };
 
   const validateRole = (value) => {
-    const validRoles = ['asesor', 'asesorJR', 'gerente_sucursal', 'gerente_zona', 'admin'];
+    const validRoles = ['pendiente', 'asesor', 'asesorJR', 'gerente_sucursal', 'gerente_zona', 'admin'];
     if (!validRoles.includes(value)) {
-      setNotificationMessage('El rol debe ser uno de los siguientes: asesor, asesorJR, gerente_sucursal, gerente_zona o admin.');
+      setNotificationMessage('El rol debe ser uno de los siguientes: pendiente, asesor, asesorJR, gerente_sucursal, gerente_zona o admin.');
       setNotificationType('error');
       setShowNotification(true);
       return false;
@@ -134,7 +134,7 @@ const EditUser = () => {
       }, 3000);
     }  catch (error) {
       if (error.response && error.response.status === 400) {
-        setNotificationMessage('El correo electrónico no es válido para el rol.');
+        setNotificationMessage(error.response.data?.error || 'Datos no válidos.');
       } else {
         setNotificationMessage('Error al actualizar el usuario');
       }

@@ -15,10 +15,9 @@ It communicates securely with the backend API and dynamically adapts content bas
 
 ## 🔐 Authentication Handling
 
-- Secure session handling via HttpOnly cookies (managed by backend)  
-- Role-based UI rendering  
-- Protected routes  
-- Automatic redirection for unauthorized access  
+- JWT-based session sent as a Bearer token (stored in `localStorage`)
+- Role-based UI rendering and redirects for admin-only screens (authorization is enforced by the API)
+- Redirect to `/login` when there is no token
 
 ## 📊 Core Features
 

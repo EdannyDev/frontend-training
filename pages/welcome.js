@@ -64,7 +64,7 @@ const Welcome = () => {
         <ContentWrapper>
           <Header>
             <h1>¡Bienvenido al software de capacitación!</h1>
-            <p>Capacitación integral para el uso correcto del sistema Skillhub.</p>
+            <p>Capacitación integral para el uso correcto del ERP.</p>
           </Header>
           <MainContent>
             <button onClick={handleButtonClick}>
@@ -86,11 +86,15 @@ const Welcome = () => {
             <PopupBody>
               {user.role === 'admin' ? (
                 <p>
-                  Bienvenido, <strong>{user.role}</strong>. Como personal de RH, tienes el acceso total para gestionar la capacitación y optimizar el uso de Skillhub en Corpora Inc.
+                  Bienvenido, <strong>{user.role}</strong>. Como personal de RH, tienes el acceso total para gestionar la capacitación y optimizar el uso del ERP.
+                </p>
+              ) : user.role === 'pendiente' ? (
+                <p>
+                  Tu cuenta fue creada. <strong>RH te asignará un puesto</strong> para habilitar tu capacitación; mientras tanto no verás materiales.
                 </p>
               ) : (
                 <p>
-                  Bienvenido, <strong>{user.role}</strong>. Como parte del equipo de ventas, tendrás acceso a todo lo necesario para aprender y utilizar Skillhub de forma efectiva.
+                  Bienvenido, <strong>{user.role}</strong>. Como parte del equipo de ventas, tendrás acceso a todo lo necesario para aprender y utilizar el ERP de forma efectiva.
                 </p>
               )}
             </PopupBody>

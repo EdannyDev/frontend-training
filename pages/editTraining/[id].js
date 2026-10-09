@@ -3,6 +3,7 @@ import API from '../../utils/api';
 import { useRouter } from 'next/router';
 import Notification from '../../frontend/components/notification';
 import Spinner from '@/frontend/components/spinner';
+import { getViewerUrl } from '../../utils/viewerUrl';
 import { 
   Container, 
   Title, 
@@ -306,7 +307,7 @@ const EditTraining = () => {
         {previewDocument && (
           <>
             <FilePreviewContainer>
-              <embed src={previewDocument} type="application/pdf" width="100%" height="300px" />
+              <iframe title="Vista previa" src={getViewerUrl(previewDocument)} style={{ width: '100%', height: '100%', border: 'none' }} />
             </FilePreviewContainer>
               <DeleteButton type="button" onClick={handleDeleteDocument}>
                 <FontAwesomeIcon icon={faTrash} /> Eliminar Documento

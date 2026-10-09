@@ -3,6 +3,7 @@ import API from '../utils/api';
 import { useRouter } from 'next/router';
 import Spinner from '@/frontend/components/spinner';
 import ProgressBar from '../frontend/components/progressBar';
+import { getViewerUrl } from '../utils/viewerUrl';
 import { SectionTitle, ModuleContainer, ModuleTitle, MaterialContainer, MaterialTitle, MaterialDescription, Title, MaterialRoles, SubmoduleTitle,
   SectionDivider, ContentContainer, ErrorBadge, WarningBadge, InputSearch, IconWrapper, NoSubmoduleText, ModalOverlay, ModalContainer, ModalTitle,
   ModalContent, DocumentButton, VideoButton, ModalCloseButton, ButtonTest, ButtonTestRetry, NotificationContainer, NotificationMessage,
@@ -31,7 +32,7 @@ const CapacitationPage = () => {
   const documentRef = useRef(null);
   const documentTrackingIntervalRef = useRef(null);
   const currentTrackingIdRef = useRef(null);
-  const lastProgress = {};
+  const lastProgressRef = useRef({});
   const [retryDisabled, setRetryDisabled] = useState(false);
 
   const showCustomNotification = (message, type) => {
@@ -230,13 +231,6 @@ const CapacitationPage = () => {
                 progress: userProgress ? (type === "document" ? userProgress.documentProgress : userProgress.videoProgress) : 0,
             });
             setIsModalOpen(true);
-
-            if (type === "document") {
-              const savedProgress = Number(localStorage.getItem(`progress_${training._id}`)) || 0;
-              if (savedProgress < 100) {
-                  startDocumentProgressTracking(training._id);
-              }
-          }
             setLoading(false);
             return;
         }
@@ -284,8 +278,9 @@ const CapacitationPage = () => {
   const updateProgress = async (trainingId, type, newProgress) => {
     if (role === "admin") return;
   
-    if (lastProgress[trainingId] === newProgress) return;
-    lastProgress[trainingId] = newProgress;
+    const progressKey = `${trainingId}-${type}`;
+    if (lastProgressRef.current[progressKey] === newProgress) return;
+    lastProgressRef.current[progressKey] = newProgress;
 
     const userId = localStorage.getItem("userId"); 
     if (!userId) {
@@ -329,14 +324,16 @@ const CapacitationPage = () => {
     }
   };
 
-  const startDocumentProgressTracking = (trainingId) => {
+  const startDocumentProgressTracking = (trainingId, startProgress = 0) => {
+    if (role === "admin") return;
+
     if (documentTrackingIntervalRef.current) {
         clearInterval(documentTrackingIntervalRef.current);
         documentTrackingIntervalRef.current = null;
     }
 
     currentTrackingIdRef.current = trainingId;
-    let elapsedTime = Number(localStorage.getItem(`progress_${trainingId}`)) || 0;
+    let elapsedTime = (startProgress / 100) * 300;
 
     documentTrackingIntervalRef.current = setInterval(() => {
         if (currentTrackingIdRef.current !== trainingId) {
@@ -347,21 +344,20 @@ const CapacitationPage = () => {
         elapsedTime += 10;
         const progress = Math.min((elapsedTime / 300) * 100, 100);
 
-        localStorage.setItem(`progress_${trainingId}`, elapsedTime);
         updateProgress(trainingId, "document", progress);
 
         if (elapsedTime >= 300) {
             updateProgress(trainingId, "document", 100);
             clearInterval(documentTrackingIntervalRef.current);
             documentTrackingIntervalRef.current = null;
-            localStorage.removeItem(`progress_${trainingId}`);
         }
     }, 10000);
   };
   
   const handleVideoProgress = (event, trainingId) => {
   const video = event.target;
-  const newProgress = (video.currentTime / video.duration) * 100;
+  const newProgress = Math.floor((video.currentTime / video.duration) * 100);
+  if (!Number.isFinite(newProgress)) return;
     updateProgress(trainingId, "video", Math.min(newProgress, 100));
   };
 
@@ -624,15 +620,22 @@ const CapacitationPage = () => {
             <ModalContent>
               {modalData?.fileUrl ? (
                 modalData.type === "document" ? (
-                  <iframe
-                    ref={documentRef}
-                    title="Material"
-                    src={modalData.fileUrl}
-                    style={{ width: "100%", height: "70vh", border: "none" }}
-                    onLoad={() => {
-                      startDocumentProgressTracking(modalData.trainingId);
-                    }}
-                  />
+                  <>
+                    <iframe
+                      ref={documentRef}
+                      title="Material"
+                      src={getViewerUrl(modalData.fileUrl)}
+                      style={{ width: "100%", height: "70vh", border: "none" }}
+                      onLoad={() => {
+                        if (!documentTrackingIntervalRef.current && modalData.progress < 100) {
+                          startDocumentProgressTracking(modalData.trainingId, modalData.progress);
+                        }
+                      }}
+                    />
+                    <a href={modalData.fileUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '14px' }}>
+                      ¿No se ve el documento? Descárgalo aquí
+                    </a>
+                  </>
                 ) : modalData.type === "video" ? (
                   <video
                     width="100%"
@@ -645,6 +648,7 @@ const CapacitationPage = () => {
                       }
                     }}
                     onTimeUpdate={(event) => handleVideoProgress(event, modalData.trainingId)}
+                    onEnded={() => updateProgress(modalData.trainingId, "video", 100)}
                   >
                     <source src={modalData.fileUrl} type="video/mp4" />
                     Tu navegador no soporta la etiqueta de video.

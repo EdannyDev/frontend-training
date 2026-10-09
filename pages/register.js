@@ -35,7 +35,7 @@ const Register = () => {
     try {
       const response = await API.post('/users/register', { name, email, password, securityCode });
       if (response.status === 201) {
-        setNotification({ message: 'Registro exitoso. Por favor, Inicia Sesión.', type: 'success' });
+        setNotification({ message: 'Registro exitoso. RH te asignará tu puesto para habilitar tu capacitación.', type: 'success' });
         setTimeout(() => {
           setNotification(null);
           router.push('/login');
@@ -91,7 +91,7 @@ const Register = () => {
           />
           {showEmailTip && (
             <TipMessage>
-              Tip: El email de acceso es tu nombre y puesto en la empresa, por ejemplo: <b>@adviser.com</b> es para asesores.
+              Tip: Usa tu correo de trabajo. <b>RH te asignará tu puesto</b> después de registrarte.
             </TipMessage>
           )}
         </div>

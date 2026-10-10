@@ -67,4 +67,6 @@ The app will be available at `http://localhost:3000`.
 
 ---
 
+> **Note:** this repository's commit history was reset when sensitive data was removed from the original repository.
+
 Backend API: [backend-training](https://github.com/EdannyDev/backend-training) · Author: [@EdannyDev](https://github.com/EdannyDev)
